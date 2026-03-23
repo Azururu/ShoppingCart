@@ -23,11 +23,14 @@ public class ShoppingCartApp {
 
         out.println(messages.getString("title"));
 
-        while (true) {
+        out.println(messages.getString("enter_item_count"));
+        int itemCount = Integer.parseInt(br.readLine());
+
+        for (int i = 1; i <= itemCount; i++) {
+            out.println(messages.getString("item") + " " + i);
+
             out.print(messages.getString("enter_price"));
             double price = Double.parseDouble(br.readLine());
-
-            if (price == 0) break;
 
             out.print(messages.getString("enter_quantity"));
             int quantity = Integer.parseInt(br.readLine());
