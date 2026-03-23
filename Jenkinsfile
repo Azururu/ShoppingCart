@@ -19,10 +19,15 @@ pipeline {
                 bat 'mvn test'
             }
         }
-        stage('Test Report') {
-            steps {
-                junit 'target/surefire-reports/*.xml'
-            }
+    }
+
+    post {
+        always {
+            junit '**/target/surefire-reports/TEST-*.xml'
+
+            recordCoverage(
+                tools: [[parser: 'JACOCO', pattern: '**/target/site/jacoco/jacoco.xml']]
+            )
         }
     }
 }
