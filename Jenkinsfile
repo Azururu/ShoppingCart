@@ -1,6 +1,10 @@
 pipeline {
     agent any
 
+    environment {
+        DOCKER_IMAGE = "azuruu/shopping-cart-app"
+    }
+
     stages {
         stage('Checkout') {
             steps {
@@ -9,14 +13,26 @@ pipeline {
                 url: 'https://github.com/Azururu/ShoppingCart.git'
             }
         }
-        stage('Build') {
+        stage('Build & Test') {
+                    steps {
+                        bat 'mvn clean verify'
+                    }
+                }
+        stage('Build Docker Image') {
             steps {
-                bat 'mvn clean verify'
+                bat 'docker build -t %DOCKER_IMAGE% .'
             }
         }
-        stage('Test') {
+        stage('Push to Docker Hub') {
             steps {
-                bat 'mvn test'
+                withCredentials([usernamePassword(
+                    credentialsId: 'dockerhub-creds',
+                    usernameVariable: 'DOCKER_USER',
+                    passwordVariable: 'DOCKER_PASS'
+                )]) {
+                    bat 'echo %DOCKER_PASS% | docker login -u %DOCKER_USER% --password-stdin'
+                    bat 'docker push %DOCKER_IMAGE%'
+                }
             }
         }
     }
