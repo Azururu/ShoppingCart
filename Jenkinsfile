@@ -2,7 +2,7 @@ pipeline {
     agent any
 
     environment {
-        DOCKER_IMAGE = "Azuruu/shopping-cart-app"
+        DOCKER_IMAGE = "azuruu/shopping-cart-app"
     }
 
     stages {
